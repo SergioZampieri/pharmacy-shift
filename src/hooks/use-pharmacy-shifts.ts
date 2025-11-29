@@ -36,22 +36,17 @@ function getMillisecondsUntilNextShiftChange(): number {
  * @returns Query result with shift data, loading state, and error state
  */
 export function usePharmacyShifts() {
-  const [refetchInterval, setRefetchInterval] = useState<number>(5 * 60 * 1000); // 5 minutes default
+  // Calculate initial refetch interval based on time until shift change
+  const [refetchInterval, setRefetchInterval] = useState<number>(() => {
+    const msUntilNextShift = getMillisecondsUntilNextShiftChange();
+    // If shift change is within the next 5 minutes, refetch more frequently
+    return msUntilNextShift < 5 * 60 * 1000 ? 10 * 1000 : 5 * 60 * 1000;
+  });
 
-  // Calculate time until next shift change and update refetch strategy
+  // Set up a timeout to switch to frequent polling at 8:00 AM
   useEffect(() => {
     const msUntilNextShift = getMillisecondsUntilNextShiftChange();
 
-    // If shift change is within the next 5 minutes, refetch more frequently
-    if (msUntilNextShift < 5 * 60 * 1000) {
-      // Refetch every 10 seconds when close to shift change
-      setRefetchInterval(10 * 1000);
-    } else {
-      // Normal polling: every 5 minutes
-      setRefetchInterval(5 * 60 * 1000);
-    }
-
-    // Set up a timeout to trigger refetch exactly at 8:00 AM
     const timeoutId = setTimeout(() => {
       setRefetchInterval(10 * 1000); // Switch to frequent polling after shift change
     }, msUntilNextShift);

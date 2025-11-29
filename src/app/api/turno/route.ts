@@ -20,7 +20,7 @@ export async function GET() {
     if (!response.ok) {
       return NextResponse.json(
         { error: `External API error: ${response.status} ${response.statusText}` },
-        { status: response.status },
+        { status: response.status }
       );
     }
 
@@ -35,10 +35,9 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch pharmacy shifts',
+        error: error instanceof Error ? error.message : 'Failed to fetch pharmacy shifts',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

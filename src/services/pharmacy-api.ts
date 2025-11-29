@@ -12,9 +12,7 @@ export async function fetchPharmacyShifts(): Promise<ShiftResponse> {
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch pharmacy shifts: ${response.status} ${response.statusText}`,
-    );
+    throw new Error(`Failed to fetch pharmacy shifts: ${response.status} ${response.statusText}`);
   }
 
   const data = await response.json();
